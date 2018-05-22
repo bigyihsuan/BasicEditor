@@ -34,8 +34,8 @@ public class LineNode {
 			}
 		}
 		
-		lineNumber = Integer.parseInt(input.substring(lnStart, lnEnd + 1));		
-		code = input.substring(lnEnd);
+		lineNumber = Integer.parseInt(input.substring(lnStart, lnEnd));		
+		code = input.substring(lnEnd).toUpperCase();
 		next = null;
 	}
 
@@ -63,4 +63,9 @@ public class LineNode {
 		next = n;
 	}
 	
+	
+	@Override
+	public String toString() {
+		return lineNumber + " " + code;
+	}
 }
