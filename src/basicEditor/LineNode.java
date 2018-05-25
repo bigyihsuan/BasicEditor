@@ -5,6 +5,7 @@ public class LineNode {
 	private int lineNumber;
 	private String code;
 	private LineNode next;
+	private LineNode prev;
 	
 	public LineNode(String input) {
 		parse(input);
@@ -32,11 +33,15 @@ public class LineNode {
 				lnEnd = i;
 				break;
 			}
+			lnEnd = input.length();
 		}
 		
 		lineNumber = Integer.parseInt(input.substring(lnStart, lnEnd));		
-		code = input.substring(lnEnd).toUpperCase();
+		if (input.length() > new Integer(input.substring(lnStart, lnEnd)).toString().length()) {
+			code = input.substring(lnEnd).toUpperCase();
+		}
 		next = null;
+		prev = null;
 	}
 
 	public int getLineNumber() {
@@ -50,6 +55,10 @@ public class LineNode {
 	public LineNode getNext() {
 		return next;
 	}
+	
+	public LineNode getPrevious() {
+		return prev;
+	}
 
 	public void setLineNumber(int ln) {
 		lineNumber = ln;
@@ -61,6 +70,14 @@ public class LineNode {
 
 	public void setNext(LineNode n) {
 		next = n;
+	}
+	
+	public void setPrevious(LineNode p) {
+		prev = p;
+	}
+	
+	public boolean hasNext() {
+		return next != null;
 	}
 	
 	
