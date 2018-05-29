@@ -4,16 +4,17 @@ public class LineNode {
 	
 	private int lineNumber;
 	private String code;
-	private LineNode next;
 	private LineNode prev;
+	private LineNode next;
 	
 	public LineNode(String input) {
 		parse(input);
 	}
 	
-	public LineNode(int l, String c, LineNode n) {
+	public LineNode(int l, String c, LineNode p, LineNode n) {
 		lineNumber = l;
 		code = c;
+		prev = p;
 		next = n;
 	}
 	
@@ -39,6 +40,9 @@ public class LineNode {
 		lineNumber = Integer.parseInt(input.substring(lnStart, lnEnd));		
 		if (input.length() > new Integer(input.substring(lnStart, lnEnd)).toString().length()) {
 			code = input.substring(lnEnd).toUpperCase();
+		}
+		else {
+			code = "";
 		}
 		next = null;
 		prev = null;

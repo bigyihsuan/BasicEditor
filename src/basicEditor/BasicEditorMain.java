@@ -51,21 +51,33 @@ public class BasicEditorMain {
 						LineNode tempPointer = root;
 						while (tempPointer != null) {
 							if (tempPointer.getLineNumber() == temp.getLineNumber()) {
+								
 								//change a code line
-								if (!temp.getCode().equals("")) {
+								if (tempPointer != null && !temp.getCode().equals("")) {
 									tempPointer.setCode(temp.getCode());
 									break;
 								}
+								
 								//delete a line
 								else {
-									if (tempPointer == root) {
-										tempPointer.getNext().setPrevious(null);
-										root = tempPointer.getNext();
+									//if nothing in the program
+									//	do nothing
+									if (root == null) {
+										break;
 									}
-									else if (tempPointer.getNext() != null) {
-										tempPointer.getPrevious().setNext(tempPointer.getNext());
-										tempPointer.getNext().setPrevious(tempPointer.getPrevious());
+									//if first line
+									//	if only line
+									//		delete line
+									//	else (has next)
+									//		unlink next prev
+									//		set root to next
+									else if (tempPointer == root) {
+										
 									}
+									//if not first line
+									//	if has next line
+									//		
+									//		
 									else {
 										
 									}
@@ -86,13 +98,18 @@ public class BasicEditorMain {
 					}
 				}
 			}
-			else if (in.toUpperCase().equals("LIST")) {
-				list();
+			else if (in.toUpperCase().substring(0, 3).equals("LIST")) {
+				if (in.length() == 4) {
+					list();
+				}
+				else {
+					list(Integer.parseInt(in.substring(5)));
+				}
 			}
 		} while (!wantToExit);
 
 	}
-
+	
 	public static void list() {
 		if (pointer == null) {
 			System.out.println();
@@ -104,6 +121,17 @@ public class BasicEditorMain {
 			}
 		}
 		pointer = root;
+	}
+	
+	//TODO: line-number list()
+	public static void list(int in, TreeSet<Integer> lineNums) {
+		if (lineNums.isEmpty()) {
+			System.out.println();
+		}
+		else {
+			int counter = 0;
+			
+		}
 	}
 
 }
