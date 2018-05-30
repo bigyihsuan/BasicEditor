@@ -22,7 +22,7 @@ public class BasicEditorMain {
 			pointer = root;
 			System.out.print("] ");
 			String in = input.nextLine();
-
+			
 			//handle typing in code
 			if (Character.isDigit(in.charAt(0))) {
 				temp = new LineNode(in);
@@ -33,7 +33,6 @@ public class BasicEditorMain {
 							+ "INPUT CODE WITH POSITIVE LINE NUMBER:\n" + "] ");
 					in = input.nextLine();
 				}
-				//delete line
 
 				//adding to end of program
 				//empty program
@@ -98,12 +97,12 @@ public class BasicEditorMain {
 					}
 				}
 			}
-			else if (in.toUpperCase().substring(0, 3).equals("LIST")) {
+			else if (in.toUpperCase().compareTo("LIST") >= 0) {
 				if (in.length() == 4) {
 					list();
 				}
 				else {
-					list(Integer.parseInt(in.substring(5)));
+					list(Integer.parseInt(in.substring(6)), lineNums);
 				}
 			}
 		} while (!wantToExit);
@@ -130,6 +129,25 @@ public class BasicEditorMain {
 		}
 		else {
 			int counter = 0;
+			Iterator<Integer> iter = lineNums.iterator();
+			
+			LineNode linPoint = root;
+			while (iter.hasNext()) {
+				int temp = iter.next();
+				if (in != temp) {
+					counter++;
+				}
+				else {
+					break;
+				}
+			}
+			System.out.println(counter);
+			for (/* counter */; counter > 0; counter--) {
+				if (linPoint.getNext() != null) {
+					linPoint = linPoint.getNext();
+				}
+			}
+			System.out.println(linPoint);
 			
 		}
 	}
