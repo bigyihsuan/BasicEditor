@@ -56,7 +56,6 @@ public class BasicEditorMain {
 									tempPointer.setCode(temp.getCode());
 									break;
 								}
-								
 								//delete a line
 								else {
 									//if nothing in the program
@@ -71,14 +70,31 @@ public class BasicEditorMain {
 									//		unlink next prev
 									//		set root to next
 									else if (tempPointer == root) {
-										
+										if (!tempPointer.hasNext()) {
+											root = null;
+										}
+										else {
+											tempPointer.getNext().setPrevious(null);
+											root = tempPointer.getNext();
+											tempPointer.setNext(null);
+										}
 									}
 									//if not first line
 									//	if has next line
-									//		
-									//		
+									//		link prev to next
+									//		link next to prev
+									//	else (end of program)
+									//		link prev to null
+									//		link this to null
 									else {
-										
+										if (tempPointer.hasNext()) {
+											tempPointer.getPrevious().setNext(tempPointer.getNext());
+											tempPointer.getNext().setPrevious(tempPointer.getPrevious());
+										}
+										else {
+											tempPointer.getPrevious().setNext(null);
+											tempPointer.setPrevious(null);//broke
+										}
 									}
 								}
 							}
@@ -102,7 +118,7 @@ public class BasicEditorMain {
 					list();
 				}
 				else {
-					list(Integer.parseInt(in.substring(6)), lineNums);
+					list(Integer.parseInt(in.substring(5)), lineNums);
 				}
 			}
 		} while (!wantToExit);
@@ -120,36 +136,33 @@ public class BasicEditorMain {
 			}
 		}
 		pointer = root;
+		System.out.println();
 	}
 	
-	//TODO: line-number list()
 	public static void list(int in, TreeSet<Integer> lineNums) {
-		if (lineNums.isEmpty()) {
+		if (lineNums.isEmpty() || !lineNums.contains(in)) {
 			System.out.println();
 		}
 		else {
 			int counter = 0;
-			Iterator<Integer> iter = lineNums.iterator();
-			
 			LineNode linPoint = root;
-			while (iter.hasNext()) {
-				int temp = iter.next();
-				if (in != temp) {
+			
+			for (int x : lineNums) {
+				if (x != in) {
 					counter++;
 				}
 				else {
 					break;
 				}
 			}
-			System.out.println(counter);
 			for (/* counter */; counter > 0; counter--) {
 				if (linPoint.getNext() != null) {
 					linPoint = linPoint.getNext();
 				}
 			}
 			System.out.println(linPoint);
-			
 		}
+		System.out.println();
 	}
 
 }
