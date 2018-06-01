@@ -84,6 +84,10 @@ public class LineNode {
 		return next != null;
 	}
 	
+	public boolean hasPrevious() {
+		return prev != null;
+	}
+	
 	
 	@Override
 	public String toString() {

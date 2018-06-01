@@ -22,7 +22,7 @@ public class BasicEditorMain {
 			pointer = root;
 			System.out.print("] ");
 			String in = input.nextLine();
-			
+
 			//handle typing in code
 			if (Character.isDigit(in.charAt(0))) {
 				temp = new LineNode(in);
@@ -48,59 +48,50 @@ public class BasicEditorMain {
 					if (lineNums.contains(temp.getLineNumber())) {
 						//changing the code
 						LineNode tempPointer = root;
-						while (tempPointer != null) {
-							if (tempPointer.getLineNumber() == temp.getLineNumber()) {
-								
-								//change a code line
-								if (tempPointer != null && !temp.getCode().equals("")) {
-									tempPointer.setCode(temp.getCode());
+						if (tempPointer.getLineNumber() == temp.getLineNumber()) {
+							//change a code line
+							if (!temp.getCode().equals("")) {
+								tempPointer.setCode(temp.getCode());
+								break;
+							}
+							//delete a line
+							else {
+								//if nothing in the program
+								//	do nothing
+								if (root == null) {
 									break;
 								}
-								//delete a line
-								else {
-									//if nothing in the program
-									//	do nothing
-									if (root == null) {
-										break;
+								//if first line
+								//	if has next
+								//		set root to next
+								//		remove old root
+								if (tempPointer == root) {
+									if (tempPointer.hasNext()) {
+										root = tempPointer.getNext();
+										tempPointer.getNext().setPrevious(null);
+										tempPointer.setNext(null);
 									}
-									//if first line
-									//	if only line
-									//		delete line
-									//	else (has next)
-									//		unlink next prev
-									//		set root to next
-									else if (tempPointer == root) {
-										if (!tempPointer.hasNext()) {
-											root = null;
-										}
-										else {
-											tempPointer.getNext().setPrevious(null);
-											root = tempPointer.getNext();
-											tempPointer.setNext(null);
-										}
-									}
-									//if not first line
-									//	if has next line
-									//		link prev to next
-									//		link next to prev
-									//	else (end of program)
-									//		link prev to null
-									//		link this to null
 									else {
-										if (tempPointer.hasNext()) {
-											tempPointer.getPrevious().setNext(tempPointer.getNext());
-											tempPointer.getNext().setPrevious(tempPointer.getPrevious());
-										}
-										else {
-											tempPointer.getPrevious().setNext(null);
-											tempPointer.setPrevious(null);//broke
-										}
+										root = null;
 									}
 								}
+								//if last line
+								//	remove last line from rest
+								else if (!tempPointer.hasNext()) {
+									tempPointer.getPrevious().setNext(null);
+									tempPointer.setPrevious(null);
+								}
+								//if middle line
+								//	link prev.next to next
+								//	link next.prev to prev
+								else {
+									tempPointer.getPrevious().setNext(tempPointer.getNext());
+									tempPointer.getNext().setPrevious(tempPointer.getPrevious());
+								}
 							}
-							else {
-								tempPointer = tempPointer.getNext();
-							}
+						}
+						else {
+							tempPointer = tempPointer.getNext();
 						}
 					}
 					//add new line
@@ -124,7 +115,7 @@ public class BasicEditorMain {
 		} while (!wantToExit);
 
 	}
-	
+
 	public static void list() {
 		if (pointer == null) {
 			System.out.println();
@@ -138,7 +129,7 @@ public class BasicEditorMain {
 		pointer = root;
 		System.out.println();
 	}
-	
+
 	public static void list(int in, TreeSet<Integer> lineNums) {
 		if (lineNums.isEmpty() || !lineNums.contains(in)) {
 			System.out.println();
@@ -146,7 +137,7 @@ public class BasicEditorMain {
 		else {
 			int counter = 0;
 			LineNode linPoint = root;
-			
+
 			for (int x : lineNums) {
 				if (x != in) {
 					counter++;
