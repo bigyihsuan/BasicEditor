@@ -6,6 +6,9 @@ public class LineNode {
 	private String code;
 	private LineNode prev;
 	private LineNode next;
+	private boolean isAssignment;
+	private boolean isComment;
+	private boolean isArrayDeclaration;
 	
 	public LineNode(String input) {
 		parse(input);
@@ -40,12 +43,48 @@ public class LineNode {
 		lineNumber = Integer.parseInt(input.substring(lnStart, lnEnd));		
 		if (input.length() > new Integer(input.substring(lnStart, lnEnd)).toString().length()) {
 			code = input.substring(lnEnd).toUpperCase();
+			if (code.length() >= 4) {
+				isAssignment = code.contains("LET");
+				isComment = !isAssignment && code.contains("REM");
+			}
+			else {
+				isAssignment = false;
+				isComment = false;
+			}
+			
+			if (code.contains("DIM")) {
+				checkNameValidity(code.substring(5));
+			}
 		}
 		else {
 			code = "";
 		}
 		next = null;
 		prev = null;
+	}
+	
+	/* 
+	Valid names:
+	A, AB, ABC, etc...
+	A1, A2, A3, etc...
+	
+	if a string, must have '$'
+	*/
+	private boolean checkNameValidity(String in) {
+		int parenthesesStart = 1;
+		while (in.charAt(parenthesesStart) != '(') {
+			parenthesesStart++;
+		}
+		
+		for (int i = 0; i < parenthesesStart; i++) {
+			if (isArrayDeclaration) {
+				if (Character.isLetter(in.charAt(i)) && i == 0) {
+					
+				}
+			}
+		}
+		
+		return true;
 	}
 
 	public int getLineNumber() {
@@ -63,6 +102,7 @@ public class LineNode {
 	public LineNode getPrevious() {
 		return prev;
 	}
+	
 
 	public void setLineNumber(int ln) {
 		lineNumber = ln;
@@ -88,6 +128,17 @@ public class LineNode {
 		return prev != null;
 	}
 	
+	public boolean isAssignment() {
+		return isAssignment;
+	}
+
+	public boolean isComment() {
+		return isComment;
+	}
+	
+	public boolean isArrayDeclaration() {
+		return isArrayDeclaration;
+	}
 	
 	@Override
 	public String toString() {
