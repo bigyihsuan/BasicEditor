@@ -26,7 +26,6 @@ public class BasicEditorMain {
 			//handle typing in code
 			if (Character.isDigit(in.charAt(0))) {
 				temp = new LineNode(in);
-				System.out.println(temp.isAssignment());
 				//invalid line number (negatives and 0)
 				while (temp.getLineNumber() <= 0) {
 					System.err.println("ERROR: INVALID LINE NUMBER.\n"

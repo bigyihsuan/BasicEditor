@@ -10,6 +10,7 @@ public class LineNode {
 	private enum CodeType {
 		COMMENT, ASSIGNMENT, ARRAY_DECLARATION, STRING, DEFAULT, NOTHING
 	}
+	//String is a subtype of assignment
 
 	public LineNode(String input) {
 		parse(input);
@@ -47,9 +48,15 @@ public class LineNode {
 			if (code.length() >= 4) {
 				if (code.contains("LET")) {
 					type = CodeType.ASSIGNMENT;
+					if (code.contains("\"")) {
+						type = CodeType.STRING;
+					}
 				}
 				if (code.contains("REM")) {
 					type = CodeType.COMMENT;
+				}
+				if (code.contains("DIM")) {
+					type = CodeType.ARRAY_DECLARATION;
 				}
 			}
 			else {
@@ -71,21 +78,80 @@ public class LineNode {
 
 	if a string, must have '$'
 	 */
-	private boolean checkType(String in) {
+	private boolean isValidName(String in) {
 		switch (type) {
+			case ASSIGNMENT: {
+				for (char c : getName(in).toCharArray()) {
+					if (!Character.isLetterOrDigit(c)) {
+						return false;
+					}
+				}
+				break;
+			}
+			case ARRAY_DECLARATION: {
+				if (getName(in).contains("(") && getName(in).contains(")")
+						&& getName(in).indexOf("(") < getName(in).indexOf(")")) {
+					for (char c : getName(in).toCharArray()) {
+						if (!Character.isLetterOrDigit(c) && c != '(') {
+							return false;
+						}
+					}
+				}
+				break;
+			}
+			case STRING: {
+				if (!getName(in).contains("$")) {
+					type = CodeType.NOTHING;
+					return false;
+				}
+				break;
+			}
 			case COMMENT:
-				break;
-			case ASSIGNMENT:
-				break;
-			case ARRAY_DECLARATION:
-				break;
-			case STRING:
-				break;
 			default:
 				break;
 		}
-
 		return true;
+	}
+	
+	//returns the name. Meant for assignments, arrays, and strings.
+	private String getName(String inCode) {
+		String out = "";
+		int start = 0;
+		switch (type) {
+			case ASSIGNMENT: {
+				start = 0;
+				for (int i = start; i < inCode.length(); i++) {
+					if (Character.isWhitespace(inCode.charAt(i))
+							|| !Character.isLetterOrDigit(inCode.charAt(i))) {
+						out = inCode.substring(0, i);
+					}
+				}
+				break;
+			}
+			case ARRAY_DECLARATION: {
+				start = 4;
+				for (int i = start; i < inCode.length(); i++) {
+					if (Character.isWhitespace(inCode.charAt(i))
+							|| inCode.charAt(i) != ')') {
+						//will include the parentheses
+						//e.g. AB(9)
+						out = inCode.substring(0, i);
+					}
+				}
+				break;
+			}
+			case STRING: {
+				start = 0;
+				for (int i = start; i < inCode.length(); i++) {
+					if (inCode.charAt(inCode.length() - 1) == '$') {
+						out = inCode.substring(0, i);
+					}
+				}
+				break;
+			}
+		}
+
+		return out;
 	}
 
 	public int getLineNumber() {
