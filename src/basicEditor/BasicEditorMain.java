@@ -111,6 +111,20 @@ public class BasicEditorMain {
 					list(Integer.parseInt(in.substring(5)), lineNums);
 				}
 			}
+			else if (in.toUpperCase().contains("EXIT")) {
+				wantToExit = true;
+				LineNode checker = root;
+				while (checker.hasNext()) {
+					checker = checker.getNext();
+				}
+				
+				if (!checker.getCode().toUpperCase().contains("END")) {
+					System.out.println("ERROR: LAST LINE NEEDS END");
+					wantToExit = false;
+				}
+			}
+			
+			
 		} while (!wantToExit);
 
 	}

@@ -6,7 +6,7 @@ public class LineNode {
 	private String code;
 	private LineNode prev;
 	private LineNode next;
-	private CodeType type;
+	private CodeType type = CodeType.NOTHING;
 	private enum CodeType {
 		COMMENT, ASSIGNMENT, ARRAY_DECLARATION, STRING, DEFAULT, NOTHING
 	}
@@ -46,16 +46,16 @@ public class LineNode {
 		if (input.length() > new Integer(input.substring(lnStart, lnEnd)).toString().length()) {
 			code = input.substring(lnEnd).toUpperCase();
 			if (code.length() >= 4) {
-				if (code.contains("LET")) {
+				if (code.contains("LET") && isValidName(input)) {
 					type = CodeType.ASSIGNMENT;
-					if (code.contains("\"")) {
+					if (code.contains("\"") && isValidName(input)) {
 						type = CodeType.STRING;
 					}
 				}
-				if (code.contains("REM")) {
+				else if (code.contains("REM")) {
 					type = CodeType.COMMENT;
 				}
-				if (code.contains("DIM")) {
+				else if (code.contains("DIM") && isValidName(input)) {
 					type = CodeType.ARRAY_DECLARATION;
 				}
 			}
