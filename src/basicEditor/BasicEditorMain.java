@@ -36,6 +36,7 @@ public class BasicEditorMain {
 				//adding to end of program
 				//empty program
 				if (!hasPrevious && temp != null) {
+					System.out.println("root");
 					lineNums.add(temp.getLineNumber());
 					root = temp;
 					prev = root;
@@ -96,18 +97,36 @@ public class BasicEditorMain {
 					//add new line
 					else {
 						//add in the middle
-						if (temp.getLineNumber() < lineNums.last()
-								&& prev.hasNext() && prev.getNext().hasPrevious()) {
+						if (temp.getLineNumber() < lineNums.last()) {
+							System.out.println("Middle");
 							lineNums.add(temp.getLineNumber());
-							prev.getNext().setPrevious(temp);
-							temp.setNext(prev.getNext());
-							temp.setPrevious(prev);
-							prev.setNext(temp);
-							prev = temp;
-							hasPrevious = true;
+							
+							//find the position for the new line
+							int counter = 0;
+							for (int x : lineNums) {
+								if (x == temp.getLineNumber()) {
+									break;
+								}
+								else {
+									counter++;
+								}
+							}
+							System.out.println(counter);
+							
+							//put the new line into the correct position
+							LineNode pointer = root;
+							for (int i = counter; i >= 0; i--) {
+								System.out.println(i);
+								System.out.println(pointer.getCode());
+								pointer = pointer.getNext();
+								
+							}
+							//attach line into list. newPoint is temp.next
+
 						}
 						//add in the end
 						else {
+							System.out.println("End");
 							lineNums.add(temp.getLineNumber());
 							prev.setNext(temp);
 							temp.setPrevious(prev);
