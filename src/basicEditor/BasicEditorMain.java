@@ -42,7 +42,7 @@ public class BasicEditorMain {
 					hasPrevious = true;
 				}
 				//has something there
-				else if (hasPrevious && temp != null){
+				else if (hasPrevious && temp != null) {
 					//handle changing a line
 					if (lineNums.contains(temp.getLineNumber())) {
 						//changing the code
@@ -95,11 +95,26 @@ public class BasicEditorMain {
 					}
 					//add new line
 					else {
-						lineNums.add(temp.getLineNumber());
-						prev.setNext(temp);
-						temp.setPrevious(prev);
-						prev = temp;
-						hasPrevious = true;
+						//add in the middle
+						if (temp.getLineNumber() < lineNums.last()
+								&& prev.hasNext() && prev.getNext().hasPrevious()) {
+							lineNums.add(temp.getLineNumber());
+							prev.getNext().setPrevious(temp);
+							temp.setNext(prev.getNext());
+							temp.setPrevious(prev);
+							prev.setNext(temp);
+							prev = temp;
+							hasPrevious = true;
+						}
+						//add in the end
+						else {
+							lineNums.add(temp.getLineNumber());
+							prev.setNext(temp);
+							temp.setPrevious(prev);
+							prev = temp;
+							hasPrevious = true;
+						}
+						
 					}
 				}
 			}
@@ -121,6 +136,14 @@ public class BasicEditorMain {
 				if (!checker.getCode().toUpperCase().contains("END")) {
 					System.out.println("ERROR: LAST LINE NEEDS END");
 					wantToExit = false;
+				}
+			}
+			else if (in.toUpperCase().equals("REN")) {
+				if (in.length() == 3) {
+					renumber(root, 10);
+				}
+				else {
+					renumber(root, Integer.parseInt(in.substring(3)));
 				}
 			}
 			
@@ -167,6 +190,55 @@ public class BasicEditorMain {
 			System.out.println(linPoint);
 		}
 		System.out.println();
+	}
+	
+	//Renumber lines in muliples of 10 starting at 10.
+	//if "REN XYZ", start there. else start 10
+	public static void renumber(LineNode root, int startIndex) {		
+		LineNode pointer = root;
+		TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>(); //original, new
+		
+		//find inputed line number
+		while (pointer.hasNext()) {
+			if (pointer.getLineNumber() != startIndex) {
+				pointer = pointer.getNext();
+			}
+			else { //start renumbering from wherever pointer is
+				//get number of lines after
+				LineNode temp = pointer;
+				int next = 0;
+				while (temp.hasNext()) {
+					temp = temp.getNext();
+					next++;
+				}
+				
+				next *= 10;
+				temp = pointer;
+				
+				for (int i = 0; i < next; i+=10) {
+					map.put(temp.getLineNumber(), pointer.getLineNumber() + i);
+					if (temp.hasNext()) {
+						temp = temp.getNext();
+					}
+				}
+				//has old values mapped to new values, apply new ones
+				Set<Integer> keys = map.keySet();
+				Iterator<Integer> iter = keys.iterator();
+				temp = pointer;
+				
+				while (iter.hasNext()) {
+					int key = iter.next();
+					int newLine = map.get(key);
+					temp.setLineNumber(newLine);
+					
+					if (temp.hasNext()) {
+						temp = temp.getNext();
+					}
+				}
+				break;
+			}
+		}
+		
 	}
 
 }
