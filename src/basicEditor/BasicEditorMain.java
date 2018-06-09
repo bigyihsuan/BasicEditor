@@ -41,15 +41,24 @@ public class BasicEditorMain {
 				}
 				//has something there
 				else if (root != null && temp != null) {
+					LineNode tempPointer = root;
 					//handle modifying a line that exists
 					if (lineNums.contains(temp.getLineNumber())) {
+						//find line to change
+						while (tempPointer.hasNext()) {
+							if (tempPointer.getLineNumber() != temp.getLineNumber()) {
+								tempPointer = tempPointer.getNext();
+							}
+							else {
+								break;
+							}
+						}
 						//changing the code
-						LineNode tempPointer = root;
 						if (tempPointer.getLineNumber() == temp.getLineNumber()) {
 							//change a code line
-							if (!temp.getCode().equals(tempPointer.getCode())) {
+							if (!temp.getCode().isEmpty()) {
+								System.out.println("changing line");
 								tempPointer.setCode(temp.getCode());
-								break;
 							}
 							//delete a line
 							else if (temp.getCode().equals("")) {
@@ -109,7 +118,7 @@ public class BasicEditorMain {
 							}
 							
 							//put the new line into the correct position
-							LineNode tempPointer = root;
+							tempPointer = root;
 							for (int i = counter; i > 0; i--) {
 								tempPointer = tempPointer.getNext();
 								
@@ -130,6 +139,7 @@ public class BasicEditorMain {
 						}
 						
 					}
+					tempPointer = root;
 				}
 			}
 			else if (in.toUpperCase().contains("LIST")) {
@@ -252,7 +262,5 @@ public class BasicEditorMain {
 				break;
 			}
 		}
-		
 	}
-
 }
