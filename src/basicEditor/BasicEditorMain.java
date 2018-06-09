@@ -90,7 +90,6 @@ public class BasicEditorMain {
 						//------------------
 						//change a code line
 						if (!temp.getCode().isEmpty()) {
-							System.out.println("changing line");
 							tempPointer.setCode(temp.getCode());
 						}
 						//delete a line
