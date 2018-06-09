@@ -130,8 +130,15 @@ public class BasicEditorMain {
 					}
 					//add new line
 					else {
+						//add in the beginning
+						if (temp.getLineNumber() < root.getLineNumber()) {
+							lineNums.add(temp.getLineNumber());
+							root.setPrevious(temp);
+							temp.setNext(root);
+							root = temp;
+						}
 						//add in the middle
-						if (temp.getLineNumber() < lineNums.last()) {
+						else if (temp.getLineNumber() < lineNums.last()) {
 							lineNums.add(temp.getLineNumber());
 
 							//find the position for the new line

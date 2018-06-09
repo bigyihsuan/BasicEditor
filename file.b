@@ -1,11 +1,7 @@
-10 a
-11 b
-12 c
-13 d
-14 e
-15 f
-16 g
-17 h
-18 i
-19 j
-20 k
+10 rem sample program
+11 let x = 10
+12 if if x > 100 then 70
+13 print "x= "; x
+14 let x = x + 10
+15 goto 30
+16 end
