@@ -11,7 +11,6 @@ public class BasicEditorMain {
 
 		Scanner input = new Scanner(System.in);
 		boolean wantToExit = false;
-		boolean hasPrevious = false;
 		LineNode temp = null;
 		LineNode prev = null;
 		TreeSet<Integer> lineNums = new TreeSet<Integer>();
@@ -35,27 +34,25 @@ public class BasicEditorMain {
 
 				//adding to end of program
 				//empty program
-				if (!hasPrevious && temp != null) {
-					System.out.println("root");
+				if (root == null && temp != null) {
 					lineNums.add(temp.getLineNumber());
 					root = temp;
 					prev = root;
-					hasPrevious = true;
 				}
 				//has something there
-				else if (hasPrevious && temp != null) {
-					//handle changing a line
+				else if (root != null && temp != null) {
+					//handle modifying a line that exists
 					if (lineNums.contains(temp.getLineNumber())) {
 						//changing the code
 						LineNode tempPointer = root;
 						if (tempPointer.getLineNumber() == temp.getLineNumber()) {
 							//change a code line
-							if (!temp.getCode().equals("")) {
+							if (!temp.getCode().equals(tempPointer.getCode())) {
 								tempPointer.setCode(temp.getCode());
 								break;
 							}
 							//delete a line
-							else {
+							else if (temp.getCode().equals("")) {
 								//if nothing in the program
 								//	do nothing
 								if (root == null) {
@@ -98,7 +95,6 @@ public class BasicEditorMain {
 					else {
 						//add in the middle
 						if (temp.getLineNumber() < lineNums.last()) {
-							System.out.println("Middle");
 							lineNums.add(temp.getLineNumber());
 							
 							//find the position for the new line
@@ -111,27 +107,26 @@ public class BasicEditorMain {
 									counter++;
 								}
 							}
-							System.out.println(counter);
 							
 							//put the new line into the correct position
-							LineNode pointer = root;
-							for (int i = counter; i >= 0; i--) {
-								System.out.println(i);
-								System.out.println(pointer.getCode());
-								pointer = pointer.getNext();
+							LineNode tempPointer = root;
+							for (int i = counter; i > 0; i--) {
+								tempPointer = tempPointer.getNext();
 								
 							}
-							//attach line into list. newPoint is temp.next
-
+							//attach line into list. pointer is temp.next
+							tempPointer.getPrevious().setNext(temp);
+							temp.setPrevious(tempPointer.getPrevious());
+							tempPointer.setPrevious(temp);
+							temp.setNext(tempPointer);
+							
 						}
 						//add in the end
 						else {
-							System.out.println("End");
 							lineNums.add(temp.getLineNumber());
 							prev.setNext(temp);
 							temp.setPrevious(prev);
 							prev = temp;
-							hasPrevious = true;
 						}
 						
 					}
@@ -166,7 +161,7 @@ public class BasicEditorMain {
 				}
 			}
 			
-			
+			pointer = root;
 		} while (!wantToExit);
 
 	}
